@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
@@ -16,52 +18,42 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
-                _carDal.Add(car);
-           
+            _carDal.Add(car);
+            return new SuccessResult(Messages.CarAdded);
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
             _carDal.Delete(car);
+            return new SuccessResult(Messages.CarDeleted);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            return _carDal.GetAll();
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarListed);
         }
 
-        public List<Car> GetByBrandId(int BrandId)
+        public IDataResult<List<Car>> GetByBrandId(int BrandId)
         {
-            return _carDal.GetAll(p => p.BrandId == BrandId);
+            throw new NotImplementedException();
         }
 
-        public List<Car> GetByColorId(int ColorId)
+        public IDataResult<List<Car>> GetByColorId(int ColorId)
         {
-            return _carDal.GetAll(p => p.ColorId == ColorId);
+            throw new NotImplementedException();
         }
 
-        public List<CarDetailsDto> GetCarDetails()
+        public IDataResult<List<CarDetailsDto>> GetCarDetails()
         {
-            return _carDal.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailsDto>>(_carDal.GetCarDetails());
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
-            bool IsCarValid = false;
-            foreach (var _car in _carDal.GetAll())
-            {
-                if (_car.CarId == car.CarId) { IsCarValid = true; }
-            }
-            if (IsCarValid)
-            {
-                _carDal.Update(car);
-            }
-            else
-            {
-                Console.WriteLine("No Valid Car");
-            }
+            _carDal.Update(car);
+            return new SuccessResult(Messages.CarUpdated);
         }
     }
 }

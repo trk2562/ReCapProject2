@@ -1,5 +1,6 @@
 ﻿using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
+using Entities.Concrete;
 using System;
 
 namespace ConsoleUI
@@ -9,26 +10,43 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
             CarTest();
-            //BrandTest();
+            RentalOrderTest();
 
         }
-
-        private static void BrandTest()
-        {
-            BrandManager brandManager = new BrandManager(new EfBrandDal());
-            foreach (var brand in brandManager.GetAll())
-            {
-                Console.WriteLine(brand.BrandName);
-            }
-        }
-
         private static void CarTest()
         {
             CarManager carManager = new CarManager(new EfCarDal());
 
-            foreach (var car in carManager.GetCarDetails())
+            var result = carManager.GetCarDetails();
+
+            if (result.Success == true )
             {
-                Console.WriteLine(car.CarYear+" model "+car.BrandName + " marka " +car.ColorName+ " renkli bir "+ car.Model);
+                foreach (var car in result.Data)
+                {
+                    Console.WriteLine(car.CarYear + " model " + car.BrandName + " marka " + car.ColorName + " renkli bir " + car.Model);
+                }
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+        }
+
+        private static void RentalOrderTest()
+        {
+            RentalOrderManager rentalOrderManager = new RentalOrderManager(new EfRentalOrderDal());
+
+            var result = rentalOrderManager.GetCarDetails();
+            if (result.Success == true)
+            {
+                foreach (var rental in result.Data)
+                {
+                    Console.WriteLine(rental.RentalOrderID + " No'lu " + rental.FullName + " isimli müşteri " + rental.RentStartDate + " tarihinde araç kiralamıştır. Araçın teslim tarihi: " + rental.RentEndDate);
+                }
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
             }
         }
     }
